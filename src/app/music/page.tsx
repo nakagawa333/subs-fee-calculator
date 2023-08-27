@@ -5,10 +5,8 @@ import Sidebars from '@/components/sidebars/sidebars'
 import { StyledEngineProvider } from '@mui/material/styles'
 import Image from 'next/image'
 
-export default function Page() {
+export default function Home() {
   return (
-    <main>
-      <Music />
-    </main>
+    <Music />
   )
 }
