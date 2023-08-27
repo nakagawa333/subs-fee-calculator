@@ -1,3 +1,4 @@
+import MainPage from '@/components/Home/mainHome'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -15,8 +16,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="ja">
+      <body className={inter.className}>
+        <MainPage />
+        {children}
+      </body>
     </html>
   )
 }
