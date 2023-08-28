@@ -2,19 +2,68 @@
 
 import { Box, Chip, Container, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Step, StepLabel, Stepper, Theme, Typography, useTheme } from '@mui/material';
 import { useLayoutEffect, useState } from 'react';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 export default function Music() {
     const [drawerWidth, setDrawerWidth] = useState<number>(240);
     const [appName, setAppName] = useState<string>("");
     const [sum, setSum] = useState<number>(0);
 
-    const handleChange = (event: { target: { value: string } }) => {
-        setAppName(event.target.value);
-        setSum(0);
+    const [appNames, setAppNames] = useState<string[]>([""]);
+    const [sums, setSums] = useState<number[]>([0]);
+
+    const handleChange = (event: { target: { value: string } }, index: number) => {
+        let thisAppNames = [...appNames];
+        thisAppNames[index] = event.target.value;
+        setAppNames(thisAppNames);
+
+        //料金 初期化
+        let thisSetSums = [...sums];
+        thisSetSums[index] = 0;
+        setSums(thisSetSums);
     };
 
-    const handleSumChange = (event: { target: { value: string } }) => {
-        setSum(datas[appName]["plan"][event.target.value]);
+    const handleSumChange = (event: { target: { value: string } }, index: number) => {
+        let thisSetSums = [...sums];
+        thisSetSums[index] = Number(datas[appNames[index]]["plan"][event.target.value]);
+        setSums(thisSetSums);
+        //setSum(datas[appName]["plan"][event.target.value]);
+    }
+
+    /**
+     * 追加クリック時
+     */
+    const addCircleIconClick = () => {
+        let thisAppNames = [...appNames];
+        let thisSetSums = [...sums];
+
+        thisAppNames.push("");
+        thisSetSums.push(0);
+
+        setAppNames(thisAppNames);
+        setSums(thisSetSums);
+    }
+
+    /**
+     * 削除アイコンクリック時
+     * @param index
+     */
+    const highlightOffIconClick = (index: number) => {
+        if (appNames.length <= 1) {
+            setSums([0]);
+        } else {
+            let thisAppNames = [...appNames].filter((appName: string, i: number) => {
+                if (index !== i) return appName;
+            })
+
+            let thisSums = [...sums].filter((sum: number, i: number) => {
+                if (index !== i) return sum;
+            })
+
+            setAppNames(thisAppNames);
+            setSums(thisSums);
+        }
     }
 
     const datas: any = {
@@ -100,68 +149,93 @@ export default function Music() {
 
     return (
         <>
-            <Container>
-                <Box>
-                    <FormControl
-                        sx={{
-                            m: 1,
-                            width: { xs: "100%", sm: "250px" },
-                            marginLeft: {
-                                sm: `${drawerWidth}px`
-                            }
-                        }}
-                    >
-                        <InputLabel id="demo-multiple-chip-label">アプリ名</InputLabel>
-                        <Select
-                            labelId="demo-multiple-name-label"
-                            id="demo-multiple-name"
-                            value={appName}
-                            onChange={handleChange}
-                            input={<OutlinedInput label="Name"
-                            />}
-                        >
-                            {Object.keys(datas).map((name) => (
-                                <MenuItem
-                                    key={name}
-                                    value={name}
+            <Container style={{ marginTop: "10px" }}>
+                {
+                    appNames && appNames.map((appName: string, index: number) => {
+                        return (
+                            <Box key={index}>
+                                <FormControl
+                                    sx={{
+                                        marginLeft: {
+                                            sm: `${drawerWidth}px`,
+                                            paddingTop: "20px"
+                                        }
+                                    }}
                                 >
-                                    {name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-
-                    <FormControl sx={{ m: 1, width: { xs: "100%", sm: "250px" } }}>
-                        <InputLabel id="demo-multiple-chip-label">プラン名</InputLabel>
-                        <Select
-                            labelId="demo-multiple-name-label"
-                            id="demo-multiple-name"
-                            value={datas[appName]}
-                            input={<OutlinedInput label="Name"
-                                onChange={handleSumChange}
-                            />}
-                        >
-                            {datas[appName] &&
-                                Object.keys(datas[appName]["plan"]).map((key: string) => (
-                                    <MenuItem
-                                        key={key}
-                                        value={key}
+                                    <HighlightOffIcon
+                                        onClick={() => highlightOffIconClick(index)}
+                                    />
+                                </FormControl>
+                                <FormControl
+                                    sx={{
+                                        m: 1,
+                                        width: { xs: "100%", sm: "250px" }
+                                    }}
+                                >
+                                    <InputLabel id="demo-multiple-chip-label">アプリ名</InputLabel>
+                                    <Select
+                                        labelId="demo-multiple-name-label"
+                                        id="demo-multiple-name"
+                                        value={appNames[index]}
+                                        onChange={(e) => handleChange(e, index)}
+                                        input={<OutlinedInput label="Name"
+                                        />}
                                     >
-                                        {datas[appName]["planId"][key]}
-                                    </MenuItem>
-                                ))}
-                        </Select>
-                    </FormControl>
+                                        {Object.keys(datas).map((name) => (
+                                            <MenuItem
+                                                key={name}
+                                                value={name}
+                                            >
+                                                {name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
 
-                    <FormControl sx={{ width: { sm: "250px" } }}>
-                        <Box>
-                            <Typography
-                                style={{ fontSize: 20, paddingTop: "20px" }}
-                            >
-                                {sum}円/月
-                            </Typography>
-                        </Box>
-                    </FormControl>
+                                <FormControl sx={{ m: 1, width: { xs: "100%", sm: "250px" } }}>
+                                    <InputLabel id="demo-multiple-chip-label">プラン名</InputLabel>
+                                    <Select
+                                        labelId="demo-multiple-name-label"
+                                        id="demo-multiple-name"
+                                        value={datas[appName]}
+                                        input={<OutlinedInput label="Name"
+                                            onChange={(e) => handleSumChange(e, index)}
+                                        />}
+                                    >
+                                        {datas[appName] &&
+                                            Object.keys(datas[appName]["plan"]).map((key: string) => (
+                                                <MenuItem
+                                                    key={key}
+                                                    value={key}
+                                                >
+                                                    {datas[appName]["planId"][key]}
+                                                </MenuItem>
+                                            ))}
+                                    </Select>
+                                </FormControl>
+
+                                <FormControl sx={{ width: { sm: "250px" } }}>
+                                    <Box>
+                                        <Typography
+                                            style={{ fontSize: 20, paddingTop: "20px" }}
+                                        >
+                                            {sums[index]}円/月
+                                        </Typography>
+                                    </Box>
+                                </FormControl>
+                            </Box>
+                        )
+                    })
+                }
+
+                <Box sx={{
+                    m: 1,
+                    width: { xs: "100%", sm: "250px" },
+                    marginLeft: {
+                        sm: `${drawerWidth}px`
+                    }
+                }}>
+                    <AddCircleIcon onClick={addCircleIconClick} />
                 </Box>
             </Container>
         </>
