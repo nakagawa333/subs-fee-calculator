@@ -53,13 +53,12 @@ export default function Music() {
         if (appNames.length <= 1) {
             setSums([0]);
         } else {
-            let thisAppNames = [...appNames].filter((appName: string, i: number) => {
-                if (index !== i) return appName;
-            })
+            let thisAppNames = [...appNames];
+            //削除処理
+            thisAppNames.splice(index, 1);
 
-            let thisSums = [...sums].filter((sum: number, i: number) => {
-                if (index !== i) return sum;
-            })
+            let thisSums = [...sums];
+            thisSums.splice(index, 1);
 
             setAppNames(thisAppNames);
             setSums(thisSums);
