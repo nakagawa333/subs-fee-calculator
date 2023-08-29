@@ -52,6 +52,7 @@ export default function Music() {
     const highlightOffIconClick = (index: number) => {
         if (appNames.length <= 1) {
             setSums([0]);
+            setAppNames([""]);
         } else {
             let thisAppNames = [...appNames];
             //削除処理

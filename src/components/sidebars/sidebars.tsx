@@ -14,17 +14,17 @@ import LiveTvIcon from '@mui/icons-material/LiveTv';
 import BookIcon from '@mui/icons-material/Book';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useRouter } from 'next/navigation';
+import { UseSidebarsEvent } from '@/hooks/sidebarsEvent';
 
 
 type Props = {
   mobileOpen: boolean;
+  setMobileOpen: Dispatch<SetStateAction<boolean>>
   handleDrawerToggle: () => void;
 }
 
 export default function Sidebars(props: Props) {
-  const router = useRouter();
   const drawerWidth: number = 240;
-  const [mobileOpen, setMobileOpen] = useState(true);
 
   const iconInfos: any = {
     "音楽": {
@@ -40,6 +40,11 @@ export default function Sidebars(props: Props) {
       "icon": <BookIcon />
     }
   }
+
+  const [event] = UseSidebarsEvent(
+    props.setMobileOpen,
+    iconInfos
+  );
 
   const drawer = (
     <div>
@@ -60,7 +65,7 @@ export default function Sidebars(props: Props) {
       <Divider />
       <List>
         {['音楽', '動画', '電子書籍'].map((text, index) => (
-          <ListItem key={text} disablePadding onClick={() => router.push(iconInfos[text]["href"])}>
+          <ListItem key={text} disablePadding onClick={() => event.listItemClick(text)}>
             <ListItemButton>
               <ListItemIcon>
                 {iconInfos[text]["icon"]}
