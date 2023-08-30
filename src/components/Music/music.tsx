@@ -1,9 +1,10 @@
 "use client";
 
 import { Box, Chip, Container, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Step, StepLabel, Stepper, Theme, Typography, useTheme } from '@mui/material';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { UseMusicEvent } from '@/hooks/musicEvent';
 
 export default function Music() {
     const [drawerWidth, setDrawerWidth] = useState<number>(240);
@@ -13,58 +14,12 @@ export default function Music() {
     const [appNames, setAppNames] = useState<string[]>([""]);
     const [sums, setSums] = useState<number[]>([0]);
 
-    const handleChange = (event: { target: { value: string } }, index: number) => {
-        let thisAppNames = [...appNames];
-        thisAppNames[index] = event.target.value;
-        setAppNames(thisAppNames);
+    const addCircleIconRef = useRef<any>(null);
 
-        //料金 初期化
-        let thisSetSums = [...sums];
-        thisSetSums[index] = 0;
-        setSums(thisSetSums);
-    };
-
-    const handleSumChange = (event: { target: { value: string } }, index: number) => {
-        let thisSetSums = [...sums];
-        thisSetSums[index] = Number(datas[appNames[index]]["plan"][event.target.value]);
-        setSums(thisSetSums);
-        //setSum(datas[appName]["plan"][event.target.value]);
-    }
-
-    /**
-     * 追加クリック時
-     */
-    const addCircleIconClick = () => {
-        let thisAppNames = [...appNames];
-        let thisSetSums = [...sums];
-
-        thisAppNames.push("");
-        thisSetSums.push(0);
-
-        setAppNames(thisAppNames);
-        setSums(thisSetSums);
-    }
-
-    /**
-     * 削除アイコンクリック時
-     * @param index
-     */
-    const highlightOffIconClick = (index: number) => {
-        if (appNames.length <= 1) {
-            setSums([0]);
-            setAppNames([""]);
-        } else {
-            let thisAppNames = [...appNames];
-            //削除処理
-            thisAppNames.splice(index, 1);
-
-            let thisSums = [...sums];
-            thisSums.splice(index, 1);
-
-            setAppNames(thisAppNames);
-            setSums(thisSums);
-        }
-    }
+    //スクロール処理
+    useEffect(() => {
+        addCircleIconRef.current.scrollIntoView();
+    }, [sums])
 
     const datas: any = {
         "Spotify": {
@@ -147,6 +102,14 @@ export default function Music() {
         }
     }
 
+    const [event] = UseMusicEvent(
+        appNames,
+        sums,
+        datas,
+        setAppNames,
+        setSums
+    )
+
     return (
         <>
             <Container style={{ marginTop: "10px" }}>
@@ -163,7 +126,7 @@ export default function Music() {
                                     }}
                                 >
                                     <HighlightOffIcon
-                                        onClick={() => highlightOffIconClick(index)}
+                                        onClick={() => event.highlightOffIconClick(index)}
                                     />
                                 </FormControl>
                                 <FormControl
@@ -177,7 +140,7 @@ export default function Music() {
                                         labelId="demo-multiple-name-label"
                                         id="demo-multiple-name"
                                         value={appNames[index]}
-                                        onChange={(e) => handleChange(e, index)}
+                                        onChange={(e) => event.handleChange(e, index)}
                                         input={<OutlinedInput label="Name"
                                         />}
                                     >
@@ -199,7 +162,7 @@ export default function Music() {
                                         id="demo-multiple-name"
                                         value={datas[appName]}
                                         input={<OutlinedInput label="Name"
-                                            onChange={(e) => handleSumChange(e, index)}
+                                            onChange={(e) => event.handleSumChange(e, index)}
                                         />}
                                     >
                                         {datas[appName] &&
@@ -234,8 +197,10 @@ export default function Music() {
                     marginLeft: {
                         sm: `${drawerWidth}px`
                     }
-                }}>
-                    <AddCircleIcon onClick={addCircleIconClick} />
+                }}
+                    ref={addCircleIconRef}
+                >
+                    <AddCircleIcon onClick={() => event.addCircleIconClick()} />
                 </Box>
             </Container>
         </>
