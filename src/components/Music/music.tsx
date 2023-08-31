@@ -118,23 +118,36 @@ export default function Music() {
                 {
                     appNames && appNames.map((appName: string, index: number) => {
                         return (
-                            <Box key={index}>
+                            <Box key={index}
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: { xs: "column", sm: "row" }
+                                }}
+                            >
                                 <FormControl
                                     sx={{
                                         marginLeft: {
                                             sm: `${drawerWidth}px`,
-                                            paddingTop: "20px"
-                                        }
+                                        },
+                                        paddingTop: "15px"
                                     }}
                                 >
                                     <HighlightOffIcon
+                                        fontSize="large"
+                                        sx={{
+                                            marginLeft: { xs: "auto", sm: 0 },
+                                            marginRight: { xs: 0, sm: 0 },
+                                            display: { xs: "block" }
+                                        }}
                                         onClick={() => event.highlightOffIconClick(index)}
                                     />
                                 </FormControl>
                                 <FormControl
                                     sx={{
-                                        m: 1,
-                                        width: { xs: "100%", sm: "250px" }
+                                        width: { xs: "100%", sm: "250px" },
+                                        margin: { xs: "auto", sm: 0 },
+                                        marginLeft: { xs: "0px", sm: "10px" },
+                                        marginTop: { xs: "10px" }
                                     }}
                                 >
                                     <InputLabel id="demo-multiple-chip-label">アプリ名</InputLabel>
@@ -157,7 +170,14 @@ export default function Music() {
                                     </Select>
                                 </FormControl>
 
-                                <FormControl sx={{ m: 1, width: { xs: "100%", sm: "250px" } }}>
+                                <FormControl
+                                    sx={{
+                                        width: { xs: "100%", sm: "250px" },
+                                        margin: { xs: "auto", sm: 0 },
+                                        marginLeft: { xs: "0px", sm: "10px" },
+                                        marginTop: { xs: "10px" }
+                                    }}
+                                >
                                     <InputLabel id="demo-multiple-chip-label">プラン名</InputLabel>
                                     <Select
                                         labelId="demo-multiple-name-label"
@@ -178,11 +198,10 @@ export default function Music() {
                                             ))}
                                     </Select>
                                 </FormControl>
-
                                 <FormControl sx={{ width: { sm: "250px" } }}>
                                     <Box>
                                         <Typography
-                                            style={{ fontSize: 20, paddingTop: "20px" }}
+                                            style={{ fontSize: 20, paddingTop: "20px", textAlign: "right" }}
                                             sx={{
                                                 paddingLeft: { sm: "190px" }
                                             }}
@@ -197,17 +216,23 @@ export default function Music() {
                 }
 
                 <Box sx={{
-                    m: 1,
                     width: { xs: "100%", sm: "250px" },
                     marginLeft: {
                         sm: `${drawerWidth}px`
-                    }
+                    },
                 }}
                     ref={addCircleIconRef}
                 >
-                    <AddCircleIcon onClick={() => event.addCircleIconClick()} />
+                    <AddCircleIcon
+                        onClick={() => event.addCircleIconClick()}
+                        sx={{
+                            margin: { xs: "auto", sm: 0 },
+                            display: { xs: "block" }
+                        }}
+                        fontSize="large"
+                    />
                 </Box>
-            </Container>
+            </Container >
         </>
     )
 }
