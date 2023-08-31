@@ -12,8 +12,10 @@ export const UseMusicEvent = (
   appNames: string[],
   sums: number[],
   datas: any,
+  addEvent: boolean,
   setAppNames: Dispatch<SetStateAction<string[]>>,
-  setSums: Dispatch<SetStateAction<number[]>>
+  setSums: Dispatch<SetStateAction<number[]>>,
+  setAddEvent: Dispatch<SetStateAction<boolean>>
 ): [MusicEvent] => {
 
   /**
@@ -57,6 +59,7 @@ export const UseMusicEvent = (
 
     setAppNames(thisAppNames);
     setSums(thisSetSums);
+    setAddEvent(!addEvent);
   }
 
   /**

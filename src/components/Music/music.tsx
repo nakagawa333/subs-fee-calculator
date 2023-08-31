@@ -13,13 +13,13 @@ export default function Music() {
 
     const [appNames, setAppNames] = useState<string[]>([""]);
     const [sums, setSums] = useState<number[]>([0]);
-
+    const [addEvent, setAddEvent] = useState<boolean>(true);
     const addCircleIconRef = useRef<any>(null);
 
     //スクロール処理
     useEffect(() => {
         addCircleIconRef.current.scrollIntoView();
-    }, [sums])
+    }, [addEvent])
 
     const datas: any = {
         "Spotify": {
@@ -106,13 +106,15 @@ export default function Music() {
         appNames,
         sums,
         datas,
+        addEvent,
         setAppNames,
-        setSums
+        setSums,
+        setAddEvent
     )
 
     return (
         <>
-            <Container style={{ marginTop: "10px" }}>
+            <Container style={{ marginTop: "10px" }} sx={{ borderBottom: 1 }}>
                 {
                     appNames && appNames.map((appName: string, index: number) => {
                         return (
@@ -181,6 +183,9 @@ export default function Music() {
                                     <Box>
                                         <Typography
                                             style={{ fontSize: 20, paddingTop: "20px" }}
+                                            sx={{
+                                                paddingLeft: { sm: "190px" }
+                                            }}
                                         >
                                             {sums[index]}円/月
                                         </Typography>
