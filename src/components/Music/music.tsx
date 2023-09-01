@@ -7,19 +7,8 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { UseMusicEvent } from '@/hooks/musicEvent';
 
 export default function Music() {
-    const [drawerWidth, setDrawerWidth] = useState<number>(240);
-    const [appName, setAppName] = useState<string>("");
-    const [sum, setSum] = useState<number>(0);
+    const drawerWidth: number = 240;
 
-    const [appNames, setAppNames] = useState<string[]>([""]);
-    const [sums, setSums] = useState<number[]>([0]);
-    const [addEvent, setAddEvent] = useState<boolean>(true);
-    const addCircleIconRef = useRef<any>(null);
-
-    //スクロール処理
-    useEffect(() => {
-        addCircleIconRef.current.scrollIntoView();
-    }, [addEvent])
 
     const datas: any = {
         "Spotify": {
@@ -102,14 +91,8 @@ export default function Music() {
         }
     }
 
-    const [event] = UseMusicEvent(
-        appNames,
-        sums,
-        datas,
-        addEvent,
-        setAppNames,
-        setSums,
-        setAddEvent
+    const [appNames, sums, totalPrice, addCircleIconRef, event] = UseMusicEvent(
+        datas
     )
 
     return (
@@ -231,6 +214,10 @@ export default function Music() {
                         }}
                         fontSize="large"
                     />
+                </Box>
+
+                <Box>
+                    {totalPrice}
                 </Box>
             </Container >
         </>

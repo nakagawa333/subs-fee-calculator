@@ -1,7 +1,9 @@
+import { useMediaQuery } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 
 type MusicEvent = {
+  calPrice: (price: number) => number;
   handleChange: (event: any, index: number) => void;
   handleSumChange: (event: any, index: number) => void;
   addCircleIconClick: () => void;
@@ -9,14 +11,37 @@ type MusicEvent = {
 }
 
 export const UseMusicEvent = (
-  appNames: string[],
-  sums: number[],
-  datas: any,
-  addEvent: boolean,
-  setAppNames: Dispatch<SetStateAction<string[]>>,
-  setSums: Dispatch<SetStateAction<number[]>>,
-  setAddEvent: Dispatch<SetStateAction<boolean>>
-): [MusicEvent] => {
+  datas: any
+
+): [string[], number[], number, any, MusicEvent] => {
+  //アプリ名一覧
+  const [appNames, setAppNames] = useState<string[]>([""]);
+  //料金一覧
+  const [sums, setSums] = useState<number[]>([0]);
+  //スクロールイベント
+  const [addEvent, setAddEvent] = useState<boolean>(true);
+
+  //全体の合計値
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const addCircleIconRef = useRef<any>(null);
+
+  //スクロール処理
+  useEffect(() => {
+    addCircleIconRef.current.scrollIntoView();
+  }, [addEvent])
+
+  useEffect(() => {
+    calTotalPrice();
+  }, [sums]);
+
+  /**
+   * 料金を計算する
+   * @param price 料金
+   * @returns 計算結果
+   */
+  const calPrice = (price: number) => {
+    return price + price;
+  }
 
   /**
    * アプリ名変更時
@@ -43,7 +68,6 @@ export const UseMusicEvent = (
     let thisSetSums = [...sums];
     thisSetSums[index] = Number(datas[appNames[index]]["plan"][event.target.value]);
     setSums(thisSetSums);
-    //setSum(datas[appName]["plan"][event.target.value]);
   }
 
   /**
@@ -59,6 +83,10 @@ export const UseMusicEvent = (
 
     setAppNames(thisAppNames);
     setSums(thisSetSums);
+
+    let totalPrice = thisSetSums.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+    setTotalPrice(totalPrice);
     setAddEvent(!addEvent);
   }
 
@@ -83,5 +111,13 @@ export const UseMusicEvent = (
     }
   }
 
-  return [{ handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick }]
+  /**
+   * 全体の合計値を取得する
+   */
+  const calTotalPrice = () => {
+    let thisTotalPrice: number = sums.reduce((acc, curr) => acc + curr, 0);
+    setTotalPrice(thisTotalPrice);
+  }
+
+  return [appNames, sums, totalPrice, addCircleIconRef, { calPrice, handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick }]
 }
