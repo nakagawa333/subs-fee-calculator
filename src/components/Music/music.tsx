@@ -5,6 +5,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { UseMusicEvent } from '@/hooks/musicEvent';
+import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+
 
 export default function Music() {
     const drawerWidth: number = 240;
@@ -100,6 +102,9 @@ export default function Music() {
 
     return (
         <>
+            <Box sx={{borderBottom: "1px solid", marginLeft: { ms: `${drawerWidth}px` }, }}>
+                <Typography sx={{fontSize:"20px"}}>音楽</Typography>
+            </Box>
             <Container style={{ marginTop: "10px" }} sx={{ borderBottom: 1 }}>
                 {
                     appNames && appNames.map((appName: string, index: number) => {
