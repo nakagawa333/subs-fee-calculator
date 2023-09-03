@@ -27,7 +27,7 @@ export const UseMusicEvent = (
 
   //スクロール処理
   useEffect(() => {
-    addCircleIconRef.current.scrollIntoView();
+    addCircleIconRef?.current?.scrollIntoView();
   }, [addEvent])
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const UseMusicEvent = (
    * @param price 料金
    * @returns 計算結果
    */
-  const calPrice = (price: number) => {
+  const calPrice = (price: number):number => {
     return price + price;
   }
 
