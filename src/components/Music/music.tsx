@@ -6,6 +6,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { UseMusicEvent } from '@/hooks/musicEvent';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+import { Coiny } from 'next/font/google';
 
 
 export default function Music() {
@@ -102,10 +103,12 @@ export default function Music() {
 
     return (
         <>
-            <Box sx={{borderBottom: "1px solid", marginLeft: { ms: `${drawerWidth}px` }, }}>
-                <Typography sx={{fontSize:"20px"}}>音楽</Typography>
+            <Box sx={{ borderBottom: "1px solid"}}>
+                <Container>
+                    <Typography sx={{fontSize:"20px",marginLeft: { sm: `${drawerWidth}px` }}}>音楽</Typography>
+                </Container>
             </Box>
-            <Container style={{ marginTop: "10px" }} sx={{ borderBottom: 1 }}>
+            <Container style={{ marginTop: "10px",borderBottom: 1 }}>
                 {
                     appNames && appNames.map((appName: string, index: number) => {
                         return (
@@ -224,12 +227,9 @@ export default function Music() {
                                     </FormControl>
                                     <FormControl
                                         sx={{
-                                            width: "100%",
-                                            margin: "auto",
-                                            marginLeft: "0px",
+                                            width: "250px",
+                                            marginLeft: "20px",
                                             marginTop: "10px",
-                                            marginRight: 0,
-                                            display: "block"
                                         }}
                                     >
                                         <InputLabel id="demo-multiple-chip-label">アプリ名</InputLabel>
@@ -254,9 +254,8 @@ export default function Music() {
 
                                     <FormControl
                                         sx={{
-                                            width: { xs: "100%", sm: "250px" },
-                                            margin: { xs: "auto", sm: 0 },
-                                            marginLeft: { xs: "0px", sm: "10px" },
+                                            width: "250px",
+                                            marginLeft: "10px",
                                             marginTop: { xs: "10px" }
                                         }}
                                     >
