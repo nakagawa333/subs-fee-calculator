@@ -1,4 +1,5 @@
 import { useMediaQuery } from '@mui/material';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -11,9 +12,8 @@ type MusicEvent = {
 }
 
 export const UseMusicEvent = (
-  datas: any
 
-): [string[], number[], number, any, MusicEvent] => {
+): [string[], number[], number, any,any, MusicEvent] => {
   //アプリ名一覧
   const [appNames, setAppNames] = useState<string[]>([""]);
   //料金一覧
@@ -25,6 +25,8 @@ export const UseMusicEvent = (
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const addCircleIconRef = useRef<any>(null);
 
+  const [datas, setDatas] = useState<any>([]);
+
   //スクロール処理
   useEffect(() => {
     addCircleIconRef?.current?.scrollIntoView();
@@ -33,6 +35,31 @@ export const UseMusicEvent = (
   useEffect(() => {
     calTotalPrice();
   }, [sums]);
+
+    useEffect(() => {
+
+      const getData = async () => {
+          //リクエストURL
+          let reqUrl: string = "https://subs-fee-calculator-backend.naka33321.workers.dev";
+          //リクエストBody
+          let reqBody = {
+              genreId:1
+          };
+
+          try {
+              let post = await axios.post(reqUrl, reqBody);
+              setDatas(post.data);
+          } catch (error: any) {
+              console.error("アプリ名、プラン名の取得に失敗しました");
+              console.error({
+                  message: error.message,
+                  errorName:error.name,
+                  content:error
+              })
+          }
+      }
+      getData();
+  }, [])
 
   /**
    * 料金を計算する
@@ -119,5 +146,5 @@ export const UseMusicEvent = (
     setTotalPrice(thisTotalPrice);
   }
 
-  return [appNames, sums, totalPrice, addCircleIconRef, { calPrice, handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick }]
+  return [appNames, sums, totalPrice, addCircleIconRef, datas,{ calPrice, handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick }]
 }
