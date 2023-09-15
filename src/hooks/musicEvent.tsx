@@ -13,9 +13,8 @@ type MusicEvent = {
 
 export const UseMusicEvent = (
 
-): [string[], number[], number, any,any, MusicEvent] => {
-  //アプリ名一覧
-  const [appNames, setAppNames] = useState<string[]>([""]);
+): [Content[],number[], number, any,any, MusicEvent] => {
+  const [contents, setContents] = useState<Content[]>([{"appName":"","planId":""}]);
   //料金一覧
   const [sums, setSums] = useState<number[]>([0]);
   //スクロールイベント
@@ -75,14 +74,13 @@ export const UseMusicEvent = (
    * @param event イベント
    * @param index インデックス
    */
-  const handleChange = (event: { target: { value: string } }, index: number) => {
-    let thisAppNames = [...appNames];
-    thisAppNames[index] = event.target.value;
-    setAppNames(thisAppNames);
+  const handleChange = (event: { target: { value: string } }, index: number):void => {
+    let thisContents:Content[] = JSON.parse(JSON.stringify(contents));
+    thisContents[index].appName = event.target.value;
+    setContents(thisContents);
 
     //料金 初期化
     let thisSetSums = [...sums];
-    thisSetSums[index] = 0;
     setSums(thisSetSums);
   };
 
@@ -91,9 +89,16 @@ export const UseMusicEvent = (
    * @param event イベント
    * @param index インデックス
    */
-  const handleSumChange = (event: { target: { value: string } }, index: number) => {
-    let thisSetSums = [...sums];
-    thisSetSums[index] = Number(datas[appNames[index]]["plan"][event.target.value]);
+  const handleSumChange = (event: { target: { value: string } }, index: number):void => {
+    let thisSetSums = [...sums]
+    //アプリ名
+    let appName:string = contents[index].appName;
+
+    thisSetSums[index] = Number(datas[appName]["plan"][event.target.value]);
+
+    let thisContents = JSON.parse(JSON.stringify(contents));
+    thisContents[index].planId = event.target.value;
+    setContents(thisContents);
     setSums(thisSetSums);
   }
 
@@ -101,17 +106,19 @@ export const UseMusicEvent = (
    * 追加クリック時
    *
    */
-  const addCircleIconClick = () => {
-    let thisAppNames = [...appNames];
-    let thisSetSums = [...sums];
+  const addCircleIconClick = ():void => {
+    let thisSetSums:number[] = [...sums];
+    let thisContents:Content[] = JSON.parse(JSON.stringify(contents));
 
-    thisAppNames.push("");
+    let content: Content = { "appName": "", "planId": "" };
+    thisContents.push(content);
+    setContents(thisContents);
+
     thisSetSums.push(0);
 
-    setAppNames(thisAppNames);
     setSums(thisSetSums);
 
-    let totalPrice = thisSetSums.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    let totalPrice:number = thisSetSums.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
     setTotalPrice(totalPrice);
     setAddEvent(!addEvent);
@@ -121,19 +128,19 @@ export const UseMusicEvent = (
    * 削除アイコンクリック時
    * @param index
    */
-  const highlightOffIconClick = (index: number) => {
-    if (appNames.length <= 1) {
+  const highlightOffIconClick = (index: number):void => {
+    if (contents.length <= 1) {
       setSums([0]);
-      setAppNames([""]);
+      let content:Content = {"appName":"","planId":""}
+      setContents([content])
     } else {
-      let thisAppNames = [...appNames];
-      //削除処理
-      thisAppNames.splice(index, 1);
-
-      let thisSums = [...sums];
+      let thisSums:number[] = [...sums];
       thisSums.splice(index, 1);
 
-      setAppNames(thisAppNames);
+      let thisContents:Content[] = [...contents];
+      thisContents.splice(index, 1);
+      setContents(thisContents);
+
       setSums(thisSums);
     }
   }
@@ -141,10 +148,10 @@ export const UseMusicEvent = (
   /**
    * 全体の合計値を取得する
    */
-  const calTotalPrice = () => {
+  const calTotalPrice = ():void => {
     let thisTotalPrice: number = sums.reduce((acc, curr) => acc + curr, 0);
     setTotalPrice(thisTotalPrice);
   }
 
-  return [appNames, sums, totalPrice, addCircleIconRef, datas,{ calPrice, handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick }]
+  return [contents,sums, totalPrice, addCircleIconRef, datas,{ calPrice, handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick }]
 }

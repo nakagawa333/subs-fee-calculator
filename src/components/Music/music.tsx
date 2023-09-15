@@ -1,16 +1,17 @@
 "use client";
 
-import { Box, Card, Container, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, Container, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Typography, useMediaQuery, useTheme } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { UseMusicEvent } from '@/hooks/musicEvent';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function Music() {
     const drawerWidth: number = 240;
     const smMaches: boolean = useMediaQuery("(min-width: 600px)");
     const xsMaches: boolean = useMediaQuery("(max-width: 599px)");
 
-    const [appNames, sums, totalPrice, addCircleIconRef, datas,event] = UseMusicEvent(
+    const [contents,sums, totalPrice, addCircleIconRef, datas,event] = UseMusicEvent(
 
     )
 
@@ -23,7 +24,7 @@ export default function Music() {
             </Box>
             <Container style={{ marginTop: "10px",borderBottom: 1 }}>
                 {
-                    appNames && appNames.map((appName: string, index: number) => {
+                    contents && contents.map((content:Content,index:number) => {
                         return (
                             xsMaches ? (
                                 <Card sx={{ marginBottom: "15px", boxShadow: 3 }}>
@@ -38,13 +39,14 @@ export default function Music() {
                                                 paddingTop: "15px"
                                             }}
                                         >
-                                            <HighlightOffIcon
+                                            <DeleteIcon
                                                 fontSize="large"
                                                 sx={{
                                                     marginLeft: "auto",
                                                     marginRight: 0,
                                                     display: "block"
                                                 }}
+                                                color="action"
                                                 onClick={() => event.highlightOffIconClick(index)}
                                             />
                                         </FormControl>
@@ -59,7 +61,7 @@ export default function Music() {
                                             <Select
                                                 labelId="demo-multiple-name-label"
                                                 id="demo-multiple-name"
-                                                value={appNames[index]}
+                                                value={contents[index]?.appName}
                                                 onChange={(e) => event.handleChange(e, index)}
                                                 input={<OutlinedInput label="Name"
                                                 />}
@@ -86,18 +88,18 @@ export default function Music() {
                                             <Select
                                                 labelId="demo-multiple-name-label"
                                                 id="demo-multiple-name"
-                                                value={datas[appName]}
+                                                value={contents[index]?.planId}
                                                 input={<OutlinedInput label="Name"
                                                     onChange={(e) => event.handleSumChange(e, index)}
                                                 />}
                                             >
-                                                {datas[appName] &&
-                                                    Object.keys(datas[appName]["plan"]).map((key: string) => (
+                                                {datas[content.appName] &&
+                                                    Object.keys(datas[content.appName]["plan"]).map((key: string) => (
                                                         <MenuItem
                                                             key={key}
                                                             value={key}
                                                         >
-                                                            {datas[appName]["planId"][key]}
+                                                            {datas[content.appName]["planId"][key]}
                                                         </MenuItem>
                                                     ))}
                                             </Select>
@@ -128,13 +130,14 @@ export default function Music() {
                                             paddingTop: "15px"
                                         }}
                                     >
-                                        <HighlightOffIcon
+                                        <DeleteIcon
                                             fontSize="large"
                                             sx={{
                                                 marginLeft: "auto",
                                                 marginRight: 0,
                                                 display: "block"
-                                            }}
+                                                }}
+                                            color="action"
                                             onClick={() => event.highlightOffIconClick(index)}
                                         />
                                     </FormControl>
@@ -149,7 +152,7 @@ export default function Music() {
                                         <Select
                                             labelId="demo-multiple-name-label"
                                             id="demo-multiple-name"
-                                            value={appNames[index]}
+                                            value={contents[index]?.appName}
                                             onChange={(e) => event.handleChange(e, index)}
                                             input={<OutlinedInput label="Name"
                                             />}
@@ -176,18 +179,18 @@ export default function Music() {
                                         <Select
                                             labelId="demo-multiple-name-label"
                                             id="demo-multiple-name"
-                                            value={datas[appName]}
+                                            value={contents[index]?.planId}
                                             input={<OutlinedInput label="Name"
                                                 onChange={(e) => event.handleSumChange(e, index)}
                                             />}
                                         >
-                                            {datas[appName] &&
-                                                Object.keys(datas[appName]["plan"]).map((key: string) => (
+                                            {datas[content.appName] &&
+                                                Object.keys(datas[content.appName]["plan"]).map((key: string) => (
                                                     <MenuItem
                                                         key={key}
                                                         value={key}
                                                     >
-                                                        {datas[appName]["planId"][key]}
+                                                        {datas[content.appName]["planId"][key]}
                                                     </MenuItem>
                                                 ))}
                                         </Select>
