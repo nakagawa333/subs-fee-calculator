@@ -9,7 +9,7 @@ type MusicEvent = {
   handleSumChange: (event: any, index: number) => void;
   addCircleIconClick: () => void;
   highlightOffIconClick: (index: number) => void;
-  sucessDeleteSnackbarClose: () => void;
+  sucessDeleteSnackbarClose: (event: React.SyntheticEvent | Event, reason?: string) => void;
 }
 
 export const UseMusicEvent = (
@@ -159,7 +159,12 @@ export const UseMusicEvent = (
   /**
    * 削除成功スナックバークローズ処理
    */
-  const sucessDeleteSnackbarClose = () => {
+  const sucessDeleteSnackbarClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    //他の要素クリック時はスナックバーを閉じない
+    if (reason === "clickaway") {
+      return;
+    }
+    //スナックバーを閉じる
     setSucessDeleteOpen(false);
   }
 

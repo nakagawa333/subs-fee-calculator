@@ -6,7 +6,7 @@ type Props = {
   open: boolean
   autoHideDuration: number
   msg: string
-  handleClose: () => void
+  handleClose: (event: React.SyntheticEvent | Event, reason?: string) => void
 }
 
 //スナックバー
@@ -21,7 +21,10 @@ export default function MaterialSnackbar(props: Props) {
       anchorOrigin={{ vertical, horizontal }}
       onClose={props.handleClose}
     >
-      <Alert onClose={props.handleClose} severity={props.severity} sx={{ width: '100%' }}>
+      <Alert
+        onClose={props.handleClose}
+        severity={props.severity}
+        sx={{ width: '100%' }}>
         {props.msg}
       </Alert>
     </Snackbar>

@@ -21,8 +21,8 @@ export default function Music() {
             <MaterialSnackbar
                 severity="success"
                 open={sucessDeleteOpen}
-                autoHideDuration={5000}
-                msg="削除に成功しました!"
+                autoHideDuration={3000}
+                msg="削除しました"
                 handleClose={event.sucessDeleteSnackbarClose}
             />
             <Box sx={{ borderBottom: "1px solid"}}>
