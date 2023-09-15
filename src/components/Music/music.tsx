@@ -2,21 +2,29 @@
 
 import { Box, Card, Container, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Typography, useMediaQuery, useTheme } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { UseMusicEvent } from '@/hooks/musicEvent';
 import DeleteIcon from '@mui/icons-material/Delete';
+import MaterialSnackbar from '../Snackbar/snackbar';
 
 export default function Music() {
     const drawerWidth: number = 240;
     const smMaches: boolean = useMediaQuery("(min-width: 600px)");
     const xsMaches: boolean = useMediaQuery("(max-width: 599px)");
 
-    const [contents,sums, totalPrice, addCircleIconRef, datas,event] = UseMusicEvent(
+    const [contents,sums, totalPrice, addCircleIconRef, datas,sucessDeleteOpen,event] = UseMusicEvent(
 
     )
 
     return (
         <>
+
+            <MaterialSnackbar
+                severity="success"
+                open={sucessDeleteOpen}
+                autoHideDuration={5000}
+                msg="削除に成功しました!"
+                handleClose={event.sucessDeleteSnackbarClose}
+            />
             <Box sx={{ borderBottom: "1px solid"}}>
                 <Container>
                     <Typography sx={{fontSize:"20px",marginLeft: { sm: `${drawerWidth}px` }}}>音楽</Typography>

@@ -9,11 +9,12 @@ type MusicEvent = {
   handleSumChange: (event: any, index: number) => void;
   addCircleIconClick: () => void;
   highlightOffIconClick: (index: number) => void;
+  sucessDeleteSnackbarClose: () => void;
 }
 
 export const UseMusicEvent = (
 
-): [Content[],number[], number, any,any, MusicEvent] => {
+): [Content[],number[], number,any,any,boolean,MusicEvent] => {
   const [contents, setContents] = useState<Content[]>([{"appName":"","planId":""}]);
   //料金一覧
   const [sums, setSums] = useState<number[]>([0]);
@@ -25,6 +26,8 @@ export const UseMusicEvent = (
   const addCircleIconRef = useRef<any>(null);
 
   const [datas, setDatas] = useState<any>([]);
+
+  const [sucessDeleteOpen,setSucessDeleteOpen] = useState<boolean>(false);
 
   //スクロール処理
   useEffect(() => {
@@ -128,21 +131,36 @@ export const UseMusicEvent = (
    * 削除アイコンクリック時
    * @param index
    */
-  const highlightOffIconClick = (index: number):void => {
+  const highlightOffIconClick = (index: number): void => {
     if (contents.length <= 1) {
-      setSums([0]);
-      let content:Content = {"appName":"","planId":""}
-      setContents([content])
+      let firstContent: Content = contents[0];
+      if (firstContent.appName !== "" && firstContent.planId !== "") {
+        setSums([0]);
+        let content: Content = { "appName": "", "planId": "" }
+        setContents([content]);
+        //削除用スナックバー
+        setSucessDeleteOpen(true);
+      }
     } else {
-      let thisSums:number[] = [...sums];
+      let thisSums: number[] = [...sums];
       thisSums.splice(index, 1);
 
-      let thisContents:Content[] = [...contents];
+      let thisContents: Content[] = [...contents];
       thisContents.splice(index, 1);
       setContents(thisContents);
 
       setSums(thisSums);
+
+      //削除用スナックバー
+      setSucessDeleteOpen(true);
     }
+  }
+
+  /**
+   * 削除成功スナックバークローズ処理
+   */
+  const sucessDeleteSnackbarClose = () => {
+    setSucessDeleteOpen(false);
   }
 
   /**
@@ -153,5 +171,5 @@ export const UseMusicEvent = (
     setTotalPrice(thisTotalPrice);
   }
 
-  return [contents,sums, totalPrice, addCircleIconRef, datas,{ calPrice, handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick }]
+  return [contents,sums, totalPrice, addCircleIconRef, datas,sucessDeleteOpen,{ calPrice, handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick,sucessDeleteSnackbarClose }]
 }
