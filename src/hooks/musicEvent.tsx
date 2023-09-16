@@ -134,7 +134,7 @@ export const UseMusicEvent = (
   const highlightOffIconClick = (index: number): void => {
     if (contents.length <= 1) {
       let firstContent: Content = contents[0];
-      if (firstContent.appName !== "" && firstContent.planId !== "") {
+      if (firstContent.appName !== "" || firstContent.planId !== "") {
         setSums([0]);
         let content: Content = { "appName": "", "planId": "" }
         setContents([content]);

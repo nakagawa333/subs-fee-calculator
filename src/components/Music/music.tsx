@@ -35,8 +35,8 @@ export default function Music() {
                     contents && contents.map((content:Content,index:number) => {
                         return (
                             xsMaches ? (
-                                <Card sx={{ marginBottom: "15px", boxShadow: 3 }}>
-                                    <Box key={index}
+                                <Card sx={{ marginBottom: "15px", boxShadow: 3 }} key={index}>
+                                    <Box
                                         sx={{
                                             display: "flex",
                                             flexDirection: "column",
@@ -127,10 +127,11 @@ export default function Music() {
                                     </Box>
                                 </Card>
                             ) : smMaches ? (
-                                <Box key={index}
+                                <Box
                                     sx={{
                                         display: "flex",
-                                    }}
+                                        }}
+                                    key={index}
                                 >
                                     <FormControl
                                         sx={{
