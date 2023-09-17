@@ -84,6 +84,7 @@ export const UseMusicEvent = (
 
     //料金 初期化
     let thisSetSums = [...sums];
+    thisSetSums[index] = 0;
     setSums(thisSetSums);
   };
 
