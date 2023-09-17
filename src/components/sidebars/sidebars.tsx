@@ -15,6 +15,7 @@ import BookIcon from '@mui/icons-material/Book';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useRouter } from 'next/navigation';
 import { UseSidebarsEvent } from '@/hooks/sidebarsEvent';
+import { Box } from '@mui/material';
 
 
 type Props = {
@@ -47,7 +48,7 @@ export default function Sidebars(props: Props) {
   );
 
   const drawer = (
-    <div>
+    <Box>
       <Toolbar
         sx={{
           display: { xs: 'block', sm: 'none' },
@@ -56,7 +57,7 @@ export default function Sidebars(props: Props) {
         <ClearIcon
           sx={{
             marginTop: "10px",
-            float: "right",
+            float: "left",
             color: "rgba(0,0,0,0.87)"
           }}
           onClick={props.handleDrawerToggle}
@@ -76,7 +77,7 @@ export default function Sidebars(props: Props) {
         ))}
       </List>
       <Divider />
-    </div>
+    </Box>
   );
 
   return (
@@ -91,6 +92,7 @@ export default function Sidebars(props: Props) {
           display: { xs: 'block', sm: 'none' },
           '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
         }}
+        anchor="right"
         onClose={props.handleDrawerToggle}
       >
         {drawer}
@@ -101,6 +103,7 @@ export default function Sidebars(props: Props) {
         ModalProps={{
           keepMounted: false,
         }}
+        anchor="left"
         sx={{
           display: { xs: 'none', sm: 'block' },
           '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },

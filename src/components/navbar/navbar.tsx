@@ -14,42 +14,43 @@ export default function Nabar(props:Props){
     return(
         <AppBar position="static">
             <Toolbar variant="dense">
-            <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={props.handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-            >
-              <MenuIcon />
-            </IconButton>               
-            <Typography 
-              variant="h6" 
-              color="inherit" 
-              component="div"
-              sx={{ 
-                flexGrow: 1, 
-                p: 3, 
-                width:{marginLeft: drawerWidth},
-                display: { xs: 'none', sm: 'block' }
-              }}
-            >
-                サブスク費用計算ツール
-            </Typography>
+              <Typography
+                variant="h6"
+                color="inherit"
+                component="div"
+                sx={{
+                  flexGrow: 1,
+                  p: 3,
+                  width:{marginLeft: drawerWidth},
+                  display: { xs: 'none', sm: 'block' }
+                }}
+              >
+                  サブスク費用計算ツール
+              </Typography>
 
-            <Typography 
-              variant="h6" 
-              color="inherit" 
-              component="div"
-              sx={{ 
-                flexGrow: 1, 
-                p: 3, 
-                width:{marginLeft: 0},
-                display: { xs: 'block', sm: 'none' }
-              }}
-            >
+              <Typography
+                variant="h6"
+                color="inherit"
+                component="div"
+                sx={{
+                  flexGrow: 1,
+                  p: 3,
+                  width:{marginLeft: 0},
+                  display: { xs: 'block', sm: 'none' }
+                }}
+              >
                 サブスク費用計算ツール
-            </Typography>
+              </Typography>
+
+              <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={props.handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: 'none' } }}
+              >
+                <MenuIcon />
+              </IconButton>
             </Toolbar>
         </AppBar>
     )
