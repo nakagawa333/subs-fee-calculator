@@ -16,20 +16,12 @@ export const UseMusicEvent = (
 ): [Content[], number, any, any, boolean, MusicEvent] => {
   const genreId: number = 1;
 
-  let getLocalContents: string | null = localStorage.getItem(LocalStorageKey.GENREID.MUSIC);
-  let localContents: Content[] = [{ appName: "", planId: "", price: 0 }];
-
-  if (getLocalContents !== null) {
-    localContents = JSON.parse(getLocalContents);
-  }
-
-  const [contents, setContents] = useState<Content[]>(localContents);
+  const [contents, setContents] = useState<Content[]>([{ appName: "", planId: "", price: 0 }]);
   //スクロールイベント
   const [addEvent, setAddEvent] = useState<boolean>(true);
 
-  const localTotalPrice: number = localStorage.getItem(LocalStorageKey.TOTALPRICE) !== null ? Number(localStorage.getItem(LocalStorageKey.TOTALPRICE)) : 0;
   //全体の合計値
-  const [totalPrice, setTotalPrice] = useState<number>(localTotalPrice);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
   const addCircleIconRef = useRef<any>(null);
 
   const [datas, setDatas] = useState<any>([]);
@@ -65,6 +57,18 @@ export const UseMusicEvent = (
         }
     }
     getData();
+
+    let getLocalContents: string | null = localStorage.getItem(LocalStorageKey.GENREID.MUSIC);
+    let localContents: Content[] = [{ appName: "", planId: "", price: 0 }];
+
+    if (getLocalContents !== null) {
+      localContents = JSON.parse(getLocalContents);    setContents(localContents);
+
+    }
+
+    const localTotalPrice: number = localStorage.getItem(LocalStorageKey.TOTALPRICE) !== null ? Number(localStorage.getItem(LocalStorageKey.TOTALPRICE)) : 0;
+    setTotalPrice(localTotalPrice);
+
 }, [])
 
   /**
