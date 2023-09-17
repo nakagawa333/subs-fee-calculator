@@ -1,10 +1,9 @@
-import { useMediaQuery } from '@mui/material';
+import { LocalStorageKey } from '@/constant/localStorageKey';
+import { Content } from '@/type/content';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect,useRef, useState } from 'react';
 
 type MusicEvent = {
-  calPrice: (price: number) => number;
   handleChange: (event: any, index: number) => void;
   handleSumChange: (event: any, index: number) => void;
   addCircleIconClick: () => void;
@@ -14,15 +13,23 @@ type MusicEvent = {
 
 export const UseMusicEvent = (
 
-): [Content[],number[], number,any,any,boolean,MusicEvent] => {
-  const [contents, setContents] = useState<Content[]>([{"appName":"","planId":""}]);
-  //料金一覧
-  const [sums, setSums] = useState<number[]>([0]);
+): [Content[], number, any, any, boolean, MusicEvent] => {
+  const genreId: number = 1;
+
+  let getLocalContents: string | null = localStorage.getItem(LocalStorageKey.GENREID.MUSIC);
+  let localContents: Content[] = [{ appName: "", planId: "", price: 0 }];
+
+  if (getLocalContents !== null) {
+    localContents = JSON.parse(getLocalContents);
+  }
+
+  const [contents, setContents] = useState<Content[]>(localContents);
   //スクロールイベント
   const [addEvent, setAddEvent] = useState<boolean>(true);
 
+  const localTotalPrice: number = localStorage.getItem(LocalStorageKey.TOTALPRICE) !== null ? Number(localStorage.getItem(LocalStorageKey.TOTALPRICE)) : 0;
   //全体の合計値
-  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [totalPrice, setTotalPrice] = useState<number>(localTotalPrice);
   const addCircleIconRef = useRef<any>(null);
 
   const [datas, setDatas] = useState<any>([]);
@@ -34,43 +41,31 @@ export const UseMusicEvent = (
     addCircleIconRef?.current?.scrollIntoView();
   }, [addEvent])
 
+
   useEffect(() => {
-    calTotalPrice();
-  }, [sums]);
 
-    useEffect(() => {
+    const getData = async () => {
+        //リクエストURL
+        let reqUrl: string = "https://subs-fee-calculator-backend.naka33321.workers.dev";
+        //リクエストBody
+        let reqBody = {
+            genreId:genreId
+        };
 
-      const getData = async () => {
-          //リクエストURL
-          let reqUrl: string = "https://subs-fee-calculator-backend.naka33321.workers.dev";
-          //リクエストBody
-          let reqBody = {
-              genreId:1
-          };
-
-          try {
-              let post = await axios.post(reqUrl, reqBody);
-              setDatas(post.data);
-          } catch (error: any) {
-              console.error("アプリ名、プラン名の取得に失敗しました");
-              console.error({
-                  message: error.message,
-                  errorName:error.name,
-                  content:error
-              })
-          }
-      }
-      getData();
-  }, [])
-
-  /**
-   * 料金を計算する
-   * @param price 料金
-   * @returns 計算結果
-   */
-  const calPrice = (price: number):number => {
-    return price + price;
-  }
+        try {
+            let post = await axios.post(reqUrl, reqBody);
+            setDatas(post.data);
+        } catch (error: any) {
+            console.error("アプリ名、プラン名の取得に失敗しました");
+            console.error({
+                message: error.message,
+                errorName:error.name,
+                content:error
+            })
+        }
+    }
+    getData();
+}, [])
 
   /**
    * アプリ名変更時
@@ -78,14 +73,12 @@ export const UseMusicEvent = (
    * @param index インデックス
    */
   const handleChange = (event: { target: { value: string } }, index: number):void => {
-    let thisContents:Content[] = JSON.parse(JSON.stringify(contents));
+    let thisContents: Content[] = JSON.parse(JSON.stringify(contents));
+    //アプリ名
     thisContents[index].appName = event.target.value;
-    setContents(thisContents);
-
-    //料金 初期化
-    let thisSetSums = [...sums];
-    thisSetSums[index] = 0;
-    setSums(thisSetSums);
+    //料金
+    thisContents[index].price = 0;
+    updateContents(thisContents);
   };
 
   /**
@@ -94,16 +87,21 @@ export const UseMusicEvent = (
    * @param index インデックス
    */
   const handleSumChange = (event: { target: { value: string } }, index: number):void => {
-    let thisSetSums = [...sums]
     //アプリ名
-    let appName:string = contents[index].appName;
-
-    thisSetSums[index] = Number(datas[appName]["plan"][event.target.value]);
+    let appName: string = contents[index].appName;
 
     let thisContents = JSON.parse(JSON.stringify(contents));
+
+    //料金変更
+    thisContents[index].price = Number(datas[appName]["plan"][event.target.value]);
+    //プランid変更
     thisContents[index].planId = event.target.value;
-    setContents(thisContents);
-    setSums(thisSetSums);
+
+    //合計料金
+    let sums: number[] = thisContents.map((content: Content) => content.price);
+
+    calTotalPrice(sums);
+    updateContents(thisContents);
   }
 
   /**
@@ -111,21 +109,20 @@ export const UseMusicEvent = (
    *
    */
   const addCircleIconClick = ():void => {
-    let thisSetSums:number[] = [...sums];
     let thisContents:Content[] = JSON.parse(JSON.stringify(contents));
 
-    let content: Content = { "appName": "", "planId": "" };
+    let content: Content = {appName:"",planId:"",price:0};
     thisContents.push(content);
     setContents(thisContents);
 
-    thisSetSums.push(0);
-
-    setSums(thisSetSums);
-
-    let totalPrice:number = thisSetSums.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    let totalPrice: number = thisContents.reduce((pre, curr) => pre + curr.price, 0);
 
     setTotalPrice(totalPrice);
     setAddEvent(!addEvent);
+
+    updateContents(thisContents);
+    //ローカルストレージ更新
+    localStorage.setItem(String(genreId),JSON.stringify(thisContents));
   }
 
   /**
@@ -136,21 +133,23 @@ export const UseMusicEvent = (
     if (contents.length <= 1) {
       let firstContent: Content = contents[0];
       if (firstContent.appName !== "" || firstContent.planId !== "") {
-        setSums([0]);
-        let content: Content = { "appName": "", "planId": "" }
-        setContents([content]);
+        let contents: Content[] = [{ appName: "", planId: "", price: 0 }]
+
+        calTotalPrice([0]);
+
+        updateContents(contents);
         //削除用スナックバー
         setSucessDeleteOpen(true);
       }
     } else {
-      let thisSums: number[] = [...sums];
-      thisSums.splice(index, 1);
 
       let thisContents: Content[] = [...contents];
       thisContents.splice(index, 1);
-      setContents(thisContents);
+      updateContents(thisContents);
+      //合計料金
+      let sums: number[] = thisContents.map((content: Content) => content.price);
 
-      setSums(thisSums);
+      calTotalPrice(sums);
 
       //削除用スナックバー
       setSucessDeleteOpen(true);
@@ -170,12 +169,23 @@ export const UseMusicEvent = (
   }
 
   /**
-   * 全体の合計値を取得する
+   * コンテンツを更新する
+   * @param content コンテンツ
    */
-  const calTotalPrice = ():void => {
-    let thisTotalPrice: number = sums.reduce((acc, curr) => acc + curr, 0);
-    setTotalPrice(thisTotalPrice);
+  const updateContents = (contents: Content[]) => {
+    setContents(contents);
+    localStorage.setItem(String(genreId),JSON.stringify(contents));
   }
 
-  return [contents,sums, totalPrice, addCircleIconRef, datas,sucessDeleteOpen,{ calPrice, handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick,sucessDeleteSnackbarClose }]
+  /**
+   * 全体の合計値を計算する
+   * @param sums 合計値
+   */
+  const calTotalPrice = (sums:number[]):void => {
+    let thisTotalPrice: number = sums.reduce((acc, curr) => acc + curr, 0);
+    setTotalPrice(thisTotalPrice);
+    localStorage.setItem(LocalStorageKey.TOTALPRICE, String(thisTotalPrice))
+  }
+
+  return [contents,totalPrice, addCircleIconRef, datas,sucessDeleteOpen,{handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick,sucessDeleteSnackbarClose }]
 }

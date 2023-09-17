@@ -1,17 +1,18 @@
 "use client";
 
-import { Box, Card, Container, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Card, Container, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Typography, useMediaQuery } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { UseMusicEvent } from '@/hooks/musicEvent';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MaterialSnackbar from '../Snackbar/snackbar';
+import { Content } from '@/type/content';
 
 export default function Music() {
     const drawerWidth: number = 240;
     const smMaches: boolean = useMediaQuery("(min-width: 600px)");
     const xsMaches: boolean = useMediaQuery("(max-width: 599px)");
 
-    const [contents,sums, totalPrice, addCircleIconRef, datas,sucessDeleteOpen,event] = UseMusicEvent(
+    const [contents,totalPrice, addCircleIconRef, datas,sucessDeleteOpen,event] = UseMusicEvent(
 
     )
 
@@ -120,7 +121,7 @@ export default function Music() {
                                                         paddingLeft: "190px"
                                                     }}
                                                 >
-                                                    {sums[index]}円/月
+                                                    {contents[index].price}円/月
                                                 </Typography>
                                             </Box>
                                         </FormControl>
@@ -212,7 +213,7 @@ export default function Music() {
                                                     paddingLeft: { sm: "190px" }
                                                 }}
                                             >
-                                                {sums[index]}円/月
+                                                                                                    {contents[index].price}円/月
                                             </Typography>
                                         </Box>
                                     </FormControl>
