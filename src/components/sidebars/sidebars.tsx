@@ -15,8 +15,8 @@ import BookIcon from '@mui/icons-material/Book';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useRouter } from 'next/navigation';
 import { UseSidebarsEvent } from '@/hooks/sidebarsEvent';
-import { Box } from '@mui/material';
-
+import { Box, Typography } from '@mui/material';
+import DataUsageIcon from '@mui/icons-material/DataUsage';
 
 type Props = {
   mobileOpen: boolean;
@@ -26,6 +26,7 @@ type Props = {
 
 export default function Sidebars(props: Props) {
   const drawerWidth: number = 240;
+  const dashboard: string = "ダッシュボード";
 
   const iconInfos: any = {
     "音楽": {
@@ -39,6 +40,10 @@ export default function Sidebars(props: Props) {
     "電子書籍": {
       "href": "/ebook",
       "icon": <BookIcon />
+    },
+    "ダッシュボード": {
+      "href": "/dashboard",
+      "icon": <DataUsageIcon />
     }
   }
 
@@ -77,6 +82,16 @@ export default function Sidebars(props: Props) {
         ))}
       </List>
       <Divider />
+      <List>
+        <ListItem key={dashboard} disablePadding onClick={() => event.listItemClick(dashboard)}>
+            <ListItemButton>
+              <ListItemIcon>
+                {iconInfos[dashboard]["icon"]}
+              </ListItemIcon>
+            <ListItemText primary={dashboard} />
+            </ListItemButton>
+        </ListItem>
+      </List>
     </Box>
   );
 
