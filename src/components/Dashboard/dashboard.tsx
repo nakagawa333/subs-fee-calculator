@@ -156,13 +156,23 @@ export default function Dashboard() {
       if (getLocalContents !== null) {
         localContents = JSON.parse(getLocalContents);
 
+        let planMap = new Map<string,number>();
         for (let localContent of localContents) {
+          let price: number | undefined = planMap.get(localContent.planId);
+          if (price) {
+            planMap.set(localContent.planId, price + localContent.price);
+          } else {
+            planMap.set(localContent.planId, localContent.price);
+          }
+        }
+
+        planMap.forEach((value,key) => {
           let obj = {
-            name: localContent.planId,
-            value: localContent.price
+            name: key,
+            value: value
           }
           thisPieData.push(obj);
-        }
+        })
 
         //大きい順に並べる
         let sortThisPieData = [...thisPieData].sort((a, b) => {
@@ -189,9 +199,25 @@ export default function Dashboard() {
 
   return (
     <>
-      <Box>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label"></InputLabel>
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "flex-end"
+        }}
+      >
+        <FormControl
+          style={{
+            width: "40%",
+            marginTop: 20,
+            marginRight:10,
+            display: "flex",
+            justifyContent:"flex-end"
+          }}
+        >
+          <InputLabel
+            id="demo-simple-select-label"
+          >
+            </InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -204,7 +230,7 @@ export default function Dashboard() {
           </Select>
         </FormControl>
       </Box>
-      <Stack spacing={3} style={{ width: '100%', height: '250px' }}>
+      <Stack spacing={3} style={{ width: '100%',height:"400px" }}>
         <ResponsiveContainer>
           <PieChart>
             <Pie
