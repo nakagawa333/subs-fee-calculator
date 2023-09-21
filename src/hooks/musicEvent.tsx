@@ -16,7 +16,7 @@ export const UseMusicEvent = (
 ): [Content[], number, any, any, boolean, MusicEvent] => {
   const genreId: number = 1;
 
-  const [contents, setContents] = useState<Content[]>([{ appName: "", planId: "", price: 0 }]);
+  const [contents, setContents] = useState<Content[]>([{ appName: "", planId: "", planName:"",price: 0 }]);
   //スクロールイベント
   const [addEvent, setAddEvent] = useState<boolean>(true);
 
@@ -59,7 +59,7 @@ export const UseMusicEvent = (
     getData();
 
     let getLocalContents: string | null = localStorage.getItem(LocalStorageKey.GENREID.MUSIC);
-    let localContents: Content[] = [{ appName: "", planId: "", price: 0 }];
+    let localContents: Content[] = [{ appName: "", planId: "", planName:"",price: 0 }];
 
     if (getLocalContents !== null) {
       localContents = JSON.parse(getLocalContents);    setContents(localContents);
@@ -96,11 +96,13 @@ export const UseMusicEvent = (
 
     let thisContents = JSON.parse(JSON.stringify(contents));
 
+    let targetValue: string = event.target.value;
     //料金変更
-    thisContents[index].price = Number(datas[appName]["plan"][event.target.value]);
+    thisContents[index].price = Number(datas[appName]["plan"][targetValue]);
     //プランid変更
-    thisContents[index].planId = event.target.value;
-
+    thisContents[index].planId = targetValue;
+    //プラン名変更
+    thisContents[index].planName = datas[appName]["planId"][targetValue];
     //合計料金
     let sums: number[] = thisContents.map((content: Content) => content.price);
 
@@ -115,7 +117,7 @@ export const UseMusicEvent = (
   const addCircleIconClick = ():void => {
     let thisContents:Content[] = JSON.parse(JSON.stringify(contents));
 
-    let content: Content = {appName:"",planId:"",price:0};
+    let content: Content = { appName: "", planId: "", planName:"",price: 0 };
     thisContents.push(content);
     setContents(thisContents);
 
@@ -137,7 +139,7 @@ export const UseMusicEvent = (
     if (contents.length <= 1) {
       let firstContent: Content = contents[0];
       if (firstContent.appName !== "" || firstContent.planId !== "") {
-        let contents: Content[] = [{ appName: "", planId: "", price: 0 }]
+        let contents: Content[] = [{ appName: "", planId: "", planName:"",price: 0 }]
 
         calTotalPrice([0]);
 

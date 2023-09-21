@@ -1,6 +1,7 @@
 "use client";
 import { LocalStorageKey } from '@/constant/localStorageKey';
 import { Content } from '@/type/content';
+import { PieData } from '@/type/pieData';
 import { Box, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from '@mui/material';
 import { setPriority } from 'os';
 import { useEffect, useState } from 'react';
@@ -14,7 +15,7 @@ import {
   Tooltip
 } from 'recharts';
 export default function Dashboard() {
-  const [pieData, setPieData] = useState<any[]>([]);
+  const [pieData, setPieData] = useState<PieData[]>([]);
 
   //音楽
   const [localMusicContents, setLocalMusicContents] = useState<Content[]>([]);
@@ -69,7 +70,7 @@ export default function Dashboard() {
     const thisPieData: any[] = [];
     //アプリ毎
     if (select === 0) {
-      let localContents: Content[] = [{ appName: "", planId: "", price: 0 }];
+      let localContents: Content[] = [{ appName: "", planId: "", planName:"",price: 0 }];
 
       let appMap = new Map<string,number>();
       if (getLocalContents !== null) {
@@ -152,25 +153,33 @@ export default function Dashboard() {
       setPieData(thisPieData);
     } else if (select === 2) {
       //プラン毎
-      let localContents: Content[] = [{ appName: "", planId: "", price: 0 }];
+      let localContents: Content[] = [{ appName: "", planId: "", planName:"",price: 0 }];
 
       if (getLocalContents !== null) {
         localContents = JSON.parse(getLocalContents);
 
-        let planMap = new Map<string,number>();
+        let planMap = new Map<string,any>();
         for (let localContent of localContents) {
           let price: number | undefined = planMap.get(localContent.planId);
           if (price) {
-            planMap.set(localContent.planId, price + localContent.price);
+            let values = {
+              price: price + localContent.price,
+              planName:localContent.planName
+            }
+            planMap.set(localContent.planId, values);
           } else {
-            planMap.set(localContent.planId, localContent.price);
+            let values = {
+              price: localContent.price,
+              planName:localContent.planName
+            }
+            planMap.set(localContent.planId, values);
           }
         }
 
         planMap.forEach((value,key) => {
           let obj = {
-            name: key,
-            value: value
+            name: value.planName,
+            value: value.price
           }
           thisPieData.push(obj);
         })
