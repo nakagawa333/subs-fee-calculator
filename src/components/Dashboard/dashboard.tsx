@@ -10,7 +10,8 @@ import {
   Pie,
   PieChart,
   PieLabel,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Tooltip
 } from 'recharts';
 export default function Dashboard() {
   const [pieData, setPieData] = useState<any[]>([]);
@@ -34,7 +35,7 @@ export default function Dashboard() {
     innerRadius,
     outerRadius,
     percent,
-    index
+    index,
   }: any) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -240,7 +241,7 @@ export default function Dashboard() {
               cx="50%"
               cy="50%"
               outerRadius={100}
-              labelLine={true}
+              labelLine={false}
               label={renderCustomizedLabel}
               fill="#8884d8">
                 {pieData.map((entry, index) => (
@@ -249,6 +250,9 @@ export default function Dashboard() {
             </Pie>
 
             <Legend />
+            <Tooltip formatter={value => {
+              return `${value}円`;
+            }} />
           </PieChart>
           </ResponsiveContainer>
         </Stack>
