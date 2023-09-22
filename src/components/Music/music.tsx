@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Card, Container, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, Container, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { UseMusicEvent } from '@/hooks/musicEvent';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -48,16 +48,18 @@ export default function Music() {
                                                 paddingTop: "15px"
                                             }}
                                         >
-                                            <DeleteIcon
-                                                fontSize="large"
-                                                sx={{
-                                                    marginLeft: "auto",
-                                                    marginRight: 0,
-                                                    display: "block"
-                                                }}
-                                                color="action"
-                                                onClick={() => event.highlightOffIconClick(index)}
-                                            />
+                                            <Tooltip title="削除する">
+                                                <DeleteIcon
+                                                    fontSize="large"
+                                                    sx={{
+                                                        marginLeft: "auto",
+                                                        marginRight: 0,
+                                                        display: "block"
+                                                    }}
+                                                    color="action"
+                                                    onClick={() => event.highlightOffIconClick(index)}
+                                                />
+                                            </Tooltip>
                                         </FormControl>
                                         <FormControl
                                             sx={{
@@ -139,17 +141,19 @@ export default function Music() {
                                             marginLeft: `${drawerWidth}px`,
                                             paddingTop: "15px"
                                         }}
-                                    >
-                                        <DeleteIcon
-                                            fontSize="large"
-                                            sx={{
-                                                marginLeft: "auto",
-                                                marginRight: 0,
-                                                display: "block"
-                                                }}
-                                            color="action"
-                                            onClick={() => event.highlightOffIconClick(index)}
-                                        />
+                                        >
+                                            <Tooltip title="削除する">
+                                                <DeleteIcon
+                                                    fontSize="large"
+                                                    sx={{
+                                                        marginLeft: "auto",
+                                                        marginRight: 0,
+                                                        display: "block"
+                                                        }}
+                                                    color="action"
+                                                    onClick={() => event.highlightOffIconClick(index)}
+                                                />
+                                            </Tooltip>
                                     </FormControl>
                                     <FormControl
                                         sx={{
@@ -233,29 +237,33 @@ export default function Music() {
                         }}
                             ref={addCircleIconRef}
                         >
-                        <AddCircleIcon
-                            onClick={() => event.addCircleIconClick()}
-                            sx={{
-                                margin: "auto",
-                                display: "block"
-                            }}
-                            fontSize="large"
+                            <Tooltip title="追加する">
+                                <AddCircleIcon
+                                    onClick={() => event.addCircleIconClick()}
+                                    sx={{
+                                        margin: "auto",
+                                        display: "block"
+                                    }}
+                                    fontSize="large"
                                 />
+                            </Tooltip>
                         </Box>
                     ): (
                             <Box sx={{
                                 width: "100%",
                         }}
                             ref={addCircleIconRef}
-                        >
-                        <AddCircleIcon
-                            onClick={() => event.addCircleIconClick()}
-                            sx={{
-                                margin: "auto",
-                                display: "block"
-                            }}
-                            fontSize="large"
-                                />
+                            >
+                                <Tooltip title="追加する">
+                                    <AddCircleIcon
+                                        onClick={() => event.addCircleIconClick()}
+                                        sx={{
+                                            margin: "auto",
+                                            display: "block"
+                                        }}
+                                        fontSize="large"
+                                    />
+                                </Tooltip>
                         </Box>
                     )
                 }
