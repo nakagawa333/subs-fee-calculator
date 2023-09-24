@@ -13,7 +13,7 @@ type MusicEvent = {
 
 export const UseMusicEvent = (
 
-): [Content[], number, any, any, boolean, MusicEvent] => {
+): [Content[], number, any, any, boolean,boolean, MusicEvent] => {
   const genreId: number = 1;
 
   const [contents, setContents] = useState<Content[]>([{ appName: "", planId: "", planName:"",price: 0 }]);
@@ -26,13 +26,18 @@ export const UseMusicEvent = (
 
   const [datas, setDatas] = useState<any>([]);
 
-  const [sucessDeleteOpen,setSucessDeleteOpen] = useState<boolean>(false);
+  const [sucessDeleteOpen, setSucessDeleteOpen] = useState<boolean>(false);
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   //スクロール処理
   useEffect(() => {
     addCircleIconRef?.current?.scrollIntoView();
   }, [addEvent])
 
+  useEffect(() => {
+    setIsLoading(false);
+  }, [contents]);
 
   useEffect(() => {
 
@@ -62,8 +67,8 @@ export const UseMusicEvent = (
     let localContents: Content[] = [{ appName: "", planId: "", planName:"",price: 0 }];
 
     if (getLocalContents !== null) {
-      localContents = JSON.parse(getLocalContents);    setContents(localContents);
-
+      localContents = JSON.parse(getLocalContents);
+      setContents(localContents);
     }
 
     const localTotalPrice: number = localStorage.getItem(LocalStorageKey.TOTALPRICE) !== null ? Number(localStorage.getItem(LocalStorageKey.TOTALPRICE)) : 0;
@@ -193,5 +198,5 @@ export const UseMusicEvent = (
     localStorage.setItem(LocalStorageKey.TOTALPRICE, String(thisTotalPrice))
   }
 
-  return [contents,totalPrice, addCircleIconRef, datas,sucessDeleteOpen,{handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick,sucessDeleteSnackbarClose }]
+  return [contents,totalPrice, addCircleIconRef, datas,sucessDeleteOpen,isLoading,{handleChange, handleSumChange, addCircleIconClick, highlightOffIconClick,sucessDeleteSnackbarClose }]
 }

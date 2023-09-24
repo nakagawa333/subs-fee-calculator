@@ -6,13 +6,17 @@ import { UseMusicEvent } from '@/hooks/musicEvent';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MaterialSnackbar from '../Snackbar/snackbar';
 import { Content } from '@/type/content';
+import MaterialSkeleton from '../Skeleton/skeleton';
+import mudicContents from './mudicContents';
+import MudicContents from './mudicContents';
+import CircularIndeterminate from '../Circular/circular';
 
 export default function Music() {
     const drawerWidth: number = 240;
     const smMaches: boolean = useMediaQuery("(min-width: 600px)");
     const xsMaches: boolean = useMediaQuery("(max-width: 599px)");
 
-    const [contents,totalPrice, addCircleIconRef, datas,sucessDeleteOpen,event] = UseMusicEvent(
+    const [contents,totalPrice, addCircleIconRef, datas,sucessDeleteOpen,isLoading,event] = UseMusicEvent(
 
     )
 
@@ -31,11 +35,11 @@ export default function Music() {
                     <Typography sx={{fontSize:"20px",marginLeft: { sm: `${drawerWidth}px` }}}>音楽</Typography>
                 </Container>
             </Box>
-            <Container style={{ marginTop: "10px",borderBottom: 1 }}>
+            <Container style={{ marginTop: "10px", borderBottom: 1 }}>
                 {
                     contents && contents.map((content:Content,index:number) => {
                         return (
-                            xsMaches ? (
+                            xsMaches && !isLoading ? (
                                 <Card sx={{ marginBottom: "15px", boxShadow: 3 }} key={index}>
                                     <Box
                                         sx={{
@@ -129,7 +133,7 @@ export default function Music() {
                                         </FormControl>
                                     </Box>
                                 </Card>
-                            ) : smMaches ? (
+                            ) : smMaches && !isLoading? (
                                 <Box
                                     sx={{
                                         display: "flex",
@@ -217,21 +221,32 @@ export default function Music() {
                                                     paddingLeft: { sm: "190px" }
                                                 }}
                                             >
-                                                                                                    {contents[index].price}円/月
+                                                {contents[index].price}円/月
                                             </Typography>
                                         </Box>
                                     </FormControl>
                                 </Box>
 
-                            ) : (
-                                <></>
-                            )
+                                ) : (
+                                    <></>
+                                )
                         )
                     })
                 }
 
                 {
-                    xsMaches ? (
+                    isLoading ? (
+                        <CircularIndeterminate
+                            isLoading={isLoading}
+                            color="inherit"
+                        />
+                    ): (
+                            <></>
+                    )
+                }
+
+                {
+                    xsMaches && !isLoading ? (
                         <Box sx = {{
                             width: "100%"
                         }}
@@ -248,11 +263,11 @@ export default function Music() {
                                 />
                             </Tooltip>
                         </Box>
-                    ): (
+                    ): smMaches && !isLoading ?(
                             <Box sx={{
-                                width: "100%",
-                        }}
-                            ref={addCircleIconRef}
+                                    width: "100%",
+                                }}
+                                ref={addCircleIconRef}
                             >
                                 <Tooltip title="追加する">
                                     <AddCircleIcon
@@ -264,12 +279,14 @@ export default function Music() {
                                         fontSize="large"
                                     />
                                 </Tooltip>
-                        </Box>
+                           </Box>
+                        ) : (
+                                <></>
                     )
                 }
 
                 {
-                    xsMaches ? (
+                    xsMaches && !isLoading? (
                         <Box
                             sx={{
                                 position: "fixed",
@@ -289,10 +306,12 @@ export default function Music() {
                                 <Typography style={{ textAlign: "right" }}>{totalPrice}</Typography>
                             </Box>
                         </Box>
-                    ) : (
+                    ) : smMaches && !isLoading ?(
                         <Box>
                             {totalPrice}
                         </Box>
+                        ) : (
+                                <></>
                     )
                 }
             </Container >
