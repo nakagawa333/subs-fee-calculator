@@ -160,16 +160,16 @@ export default function Dashboard() {
 
         let planMap = new Map<string,any>();
         for (let localContent of localContents) {
-          let price: number | undefined = planMap.get(localContent.planId);
-          if (price) {
+          let getValues: any | undefined = planMap.get(localContent.planId);
+          if (getValues) {
             let values = {
-              price: price + localContent.price,
+              price: Number(getValues.price) + Number(localContent.price),
               planName:localContent.planName
             }
             planMap.set(localContent.planId, values);
           } else {
             let values = {
-              price: localContent.price,
+              price: Number(localContent.price),
               planName:localContent.planName
             }
             planMap.set(localContent.planId, values);
