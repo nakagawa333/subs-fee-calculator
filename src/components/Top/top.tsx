@@ -3,6 +3,7 @@ import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import BookIcon from '@mui/icons-material/Book';
 import Link from "next/link";
+import { Endpoint } from "@/constant/endpoint";
 
 export default function Top() {
   const drawerWidth: number = 240;
@@ -23,7 +24,7 @@ export default function Top() {
             alignItems="center"
             spacing={4}>
             <Grid item xs={6} md={4}>
-              <Link href="/music">
+              <Link href={Endpoint.MUSIC}>
                 <LibraryMusicIcon
                   style={{
                     display:"block",
@@ -39,7 +40,7 @@ export default function Top() {
             </Grid>
 
             <Grid item xs={6} md={4}>
-              <Link href="/movie">
+              <Link href={Endpoint.MOVIE}>
                 <LiveTvIcon
                 style={{
                     display:"block",
@@ -55,7 +56,7 @@ export default function Top() {
             </Grid>
 
             <Grid item xs={12} md={4}>
-              <Link href="/ebook">
+              <Link href={Endpoint.EBOOK}>
                 <BookIcon
                 style={{
                     display:"block",

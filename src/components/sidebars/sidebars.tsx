@@ -13,10 +13,12 @@ import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import BookIcon from '@mui/icons-material/Book';
 import ClearIcon from '@mui/icons-material/Clear';
-import { useRouter } from 'next/navigation';
 import { UseSidebarsEvent } from '@/hooks/sidebarsEvent';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import DataUsageIcon from '@mui/icons-material/DataUsage';
+import HomeIcon from '@mui/icons-material/Home';
+import { Endpoint } from '@/constant/endpoint';
+import { PageName } from '@/constant/pageName';
 
 type Props = {
   mobileOpen: boolean;
@@ -26,24 +28,28 @@ type Props = {
 
 export default function Sidebars(props: Props) {
   const drawerWidth: number = 240;
-  const dashboard: string = "ダッシュボード";
+  const top: string = "トップ";
 
   const iconInfos: any = {
     "音楽": {
-      "href": "/music",
+      "href": Endpoint.MUSIC,
       "icon": <LibraryMusicIcon />
     },
     '動画': {
-      "href": "/movie",
+      "href": Endpoint.MOVIE,
       "icon": <LiveTvIcon />,
     },
     "電子書籍": {
-      "href": "/ebook",
+      "href": Endpoint.EBOOK,
       "icon": <BookIcon />
     },
     "ダッシュボード": {
-      "href": "/dashboard",
+      "href": Endpoint.DASHBOARD,
       "icon": <DataUsageIcon />
+    },
+    "サブスク計算": {
+      "href": Endpoint.TOP,
+      "icon": <HomeIcon />
     }
   }
 
@@ -69,8 +75,19 @@ export default function Sidebars(props: Props) {
         />
       </Toolbar>
       <Divider />
+        <List>
+          <ListItem key={PageName.TOP} disablePadding onClick={() => event.listItemClick(PageName.TOP)}>
+              <ListItemButton>
+                <ListItemIcon>
+                  {iconInfos[PageName.TOP]["icon"]}
+                </ListItemIcon>
+              <ListItemText primary={top} />
+              </ListItemButton>
+          </ListItem>
+        </List>
+      <Divider />
       <List>
-        {['音楽', '動画', '電子書籍'].map((text, index) => (
+        {[PageName.MUSIC,PageName.VIDEO, PageName.EBOOK,].map((text, index) => (
           <ListItem key={text} disablePadding onClick={() => event.listItemClick(text)}>
             <ListItemButton>
               <ListItemIcon>
@@ -83,12 +100,12 @@ export default function Sidebars(props: Props) {
       </List>
       <Divider />
       <List>
-        <ListItem key={dashboard} disablePadding onClick={() => event.listItemClick(dashboard)}>
+        <ListItem key={PageName.DASHBOARD} disablePadding onClick={() => event.listItemClick(PageName.DASHBOARD)}>
             <ListItemButton>
               <ListItemIcon>
-                {iconInfos[dashboard]["icon"]}
+                {iconInfos[PageName.DASHBOARD]["icon"]}
               </ListItemIcon>
-            <ListItemText primary={dashboard} />
+            <ListItemText primary={PageName.DASHBOARD} />
             </ListItemButton>
         </ListItem>
       </List>
